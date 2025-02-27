@@ -4,119 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Un petit jeu pour toi 😏</title>
-    <style>
-        /* Reset CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #ffe6e6;
-            text-align: center;
-            padding: 20px;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        h1 {
-            color: #ff4d4d;
-            font-size: 2.5em;
-            margin-bottom: 20px;
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        .question {
-            margin: 20px 0;
-            font-size: 1.2em;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        .question.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .button {
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin: 10px;
-            cursor: pointer;
-            border-radius: 50px;
-            font-size: 1em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .button:hover {
-            background-color: #ff1a1a;
-            transform: scale(1.1);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .message {
-            margin-top: 30px;
-            font-size: 1.5em;
-            color: #ff4d4d;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 1s ease, transform 1s ease;
-        }
-
-        .message.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .gif {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .arrow {
-            width: 50px;
-            margin: 10px;
-            animation: float 2s ease-in-out infinite;
-        }
-
-        /* Animation pour le bouton "Non" */
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            50% { transform: translateX(10px); }
-            75% { transform: translateX(-10px); }
-            100% { transform: translateX(0); }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-
-        /* Animation d'apparition */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -189,124 +77,21 @@
         <!-- Messages finaux -->
         <div class="message hidden" id="message">
             <p>Je t'aime plus que tout au monde ❤️</p>
-            <img src="https://media.giphy.com/media/26n6WywJyh39n1pBu/giphy.gif" alt="Love" class="gif">
+            <img src="assets/love.gif" alt="Love" class="gif">
         </div>
 
         <div class="message hidden" id="plotTwist">
             <p>Haha, tu as cru que tu pouvais dire Non ? 😏</p>
             <p>Je te laisse une deuxième chance 😉</p>
-            <img src="https://media.giphy.com/media/l0MYEqEzwMWFCg8rm/giphy.gif" alt="Plot twist" class="gif">
+            <img src="assets/plot-twist.gif" alt="Plot twist" class="gif">
             <button class="button" onclick="retourQuestion()">Retour à la question</button>
-            <img src="https://media.giphy.com/media/3o7TKsQ8gqVr5Ykq2c/giphy.gif" alt="Flèche" class="arrow">
+            <img src="assets/arrow.gif" alt="Flèche" class="arrow">
             <p>Clique sur "Oui" cette fois !</p>
         </div>
     </div>
 
-    <script>
-        let nonCount = 0;
-        let lastNonQuestionId = null;
-        let riddleAttempts = 0;
-        let indiceAffiche = false;
-
-        // Démarrer le décompte de 10 secondes
-        setTimeout(() => {
-            if (!indiceAffiche) {
-                afficherIndice();
-            }
-        }, 10000);
-
-        // Afficher l'indice
-        function afficherIndice() {
-            document.getElementById('indice').classList.remove('hidden');
-            indiceAffiche = true;
-        }
-
-        // Vérifier l'énigme
-        function checkRiddle() {
-            const answer = document.getElementById('riddleAnswer').value.toLowerCase();
-            if (answer.includes('futur') || answer.includes('avenir')) {
-                document.getElementById('cover').classList.add('hidden');
-                document.getElementById('questionnaire').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('question1').classList.add('visible');
-                }, 100); // Délai de 100ms pour l'affichage de la première question
-            } else {
-                riddleAttempts++;
-                if (riddleAttempts >= 2) {
-                    afficherIndice();
-                }
-                alert('Presque ! Réessaye 😉');
-            }
-        }
-
-        // Afficher la question suivante
-        function showNextQuestion(currentQuestionId) {
-            const currentQuestion = document.getElementById(currentQuestionId);
-            const nextQuestion = currentQuestion.nextElementSibling;
-
-            if (nextQuestion && nextQuestion.classList.contains('question')) {
-                currentQuestion.classList.remove('visible');
-                setTimeout(() => {
-                    currentQuestion.classList.add('hidden');
-                    nextQuestion.classList.remove('hidden');
-                    setTimeout(() => nextQuestion.classList.add('visible'), 50);
-                }, 500);
-            } else {
-                currentQuestion.classList.remove('visible');
-                setTimeout(() => {
-                    currentQuestion.classList.add('hidden');
-                    document.getElementById('message').classList.remove('hidden');
-                    setTimeout(() => document.getElementById('message').classList.add('visible'), 50);
-                }, 500);
-            }
-        }
-
-        // Répondre aux questions
-        function repondre(reponse, questionId) {
-            const nonButton = document.querySelector(`#${questionId} button[onclick*="Non"]`);
-
-            if (reponse === 'Oui') {
-                showNextQuestion(questionId);
-            } else if (reponse === 'Non') {
-                nonCount++;
-                lastNonQuestionId = questionId;
-
-                // Effets visuels pour "Non"
-                if (nonCount === 1) {
-                    nonButton.textContent = 'Non ? Sérieusement ?';
-                    nonButton.style.animation = 'shake 0.5s ease';
-                } else if (nonCount === 2) {
-                    nonButton.textContent = 'Non ?! Tu es sûre ?';
-                    nonButton.style.animation = 'shake 0.5s ease';
-                } else if (nonCount === 3) {
-                    nonButton.textContent = 'NON ?! 😱';
-                    nonButton.style.animation = 'shake 0.5s ease';
-                } else {
-                    // Plot twist après 3 clics sur "Non"
-                    document.getElementById(questionId).classList.remove('visible');
-                    setTimeout(() => {
-                        document.getElementById(questionId).classList.add('hidden');
-                        document.getElementById('plotTwist').classList.remove('hidden');
-                        setTimeout(() => document.getElementById('plotTwist').classList.add('visible'), 50);
-                    }, 500);
-                    nonCount = 0; // Réinitialiser le compteur
-                }
-
-                // Réinitialiser l'animation après qu'elle se termine
-                setTimeout(() => nonButton.style.animation = '', 500);
-            }
-        }
-
-        // Retour à la question où elle a répondu "Non"
-        function retourQuestion() {
-            document.getElementById('plotTwist').classList.remove('visible');
-            setTimeout(() => {
-                document.getElementById('plotTwist').classList.add('hidden');
-                document.getElementById(lastNonQuestionId).classList.remove('hidden');
-                setTimeout(() => document.getElementById(lastNonQuestionId).classList.add('visible'), 50);
-            }, 500);
-        }
-    </script>
-
+    <!-- Script pour les confettis -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
